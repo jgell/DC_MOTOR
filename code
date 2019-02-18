@@ -1,0 +1,78 @@
+from tkinter import *
+import cv2
+import time
+import threading
+
+root = Tk()
+root.title('proj')
+root.geometry("500x500")
+
+
+def tick():
+    clock = Label(root, text=time.strftime('%H:%M:%S'), font=('times', 20, 'bold'), fg='black')
+    clock.grid(row=0, column=0, sticky=W)
+    clock.after(200, tick)
+
+
+def print_value(val):
+    print(val)
+
+
+def hello():
+    print("hello")
+
+
+def goodbye():
+    cv2.namedWindow("preview")
+    vc = cv2.VideoCapture(0)
+
+    if vc.isOpened():  # try to get the first frame
+        rval, frame = vc.read()
+    else:
+        rval = False
+
+    while rval:
+        cv2.imshow("preview", frame)
+        rval, frame = vc.read()
+        key = cv2.waitKey(20)
+        if key == 27:  # exit on ESC
+            break
+    cv2.destroyWindow("preview")
+
+
+t = threading.Timer(5.0, goodbye)
+t.start()
+
+#create frames
+topFrame = Frame(root)
+#topFrame.pack(side=LEFT)
+#bottomFrame = Frame(root)
+#bottomFrame.pack(side=BOTTOM)
+
+#set time on terminal
+clock = Label(root, text=time.strftime('%H:%M:%S'), font=('times', 20, 'bold'), fg='black')
+clock.grid(row=0, column=0, sticky=W)
+clock.after(200, tick)
+
+#create labels bg = back ground colour fg = foreground colour
+one = Label(root, text="Rotate camera one", bg="blue", fg="white")
+one.grid(row=1, column=0, columnspan=5, ipadx=98.9, ipady=5, sticky=W)
+two = Label(root, text="Rotate camera two", bg="blue", fg="white")
+two.grid(row=3, column=0, columnspan=5, ipadx=98.9, ipady=5, sticky=W)
+
+#create slider
+w = Scale(root, orient=HORIZONTAL, length=300, width=20, sliderlength=10, from_=1, to=180, command=print_value, bg="blue", fg="white")
+w.grid(row=2, column=0, columnspan=5, sticky=W)
+w = Scale(root, orient=HORIZONTAL, length=300, width=20, sliderlength=10, from_=1, to=180, command=print_value, bg="blue", fg="white")
+w.grid(row=4, column=0, columnspan=5, sticky=W)
+
+#create a button
+
+#MyButton1 = Button(root, text="LEFT", width=10, command=hello)
+#MyButton1.grid(row=0, column=0)
+
+tick()
+cv2.namedWindow("preview")
+vc = cv2.VideoCapture(0)
+
+root.mainloop()
